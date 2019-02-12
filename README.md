@@ -1,2 +1,6 @@
 # Group08
-Tahsina Sabrin, Md. Atiqul Islam (Group 08)
+
+1421789042	Tahsina Sabrin	<tahsina.sabrin@northsouth.edu>
+
+1430009042	Md. Atiqul Islam	<islam.atiqul@northsouth.edu>
+
