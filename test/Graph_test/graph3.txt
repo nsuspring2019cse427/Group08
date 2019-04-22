@@ -1,0 +1,52 @@
+public function index()
+	{
+		$this->login();
+	}
+public function foodprovider_list(){
+		if ($this->session->userdata('is_logged_in')) {
+			$this->load->view('foodprovider_list');
+		}else{
+			redirect('main/restricted');
+		}
+		
+	}
+	public function foodprovider(){
+		if ($this->session->userdata('is_logged_in')) {
+			$this->load->view('foodprovider');
+		}else{
+			redirect('main/restricted');
+		}
+		
+	}
+	public function food_provide_validation(){
+		$this->load->library('form_validation');
+		$this->form_validation->set_rules('company_name','Company_Name','required');
+		$this->form_validation->set_rules('address','Address','required');
+		$this->form_validation->set_rules('email','Email','required|trim|valid_email|is_unique[food_service_provider.email]');
+		$this->form_validation->set_rules('phone_number','Phone_Number','required');
+		$this->form_validation->set_rules('provided_food','Provided_Food','required');
+		$this->form_validation->set_message('is_unique',"That Email already exist.");
+		if ($this->form_validation->run()) {
+			$this->load->model('model_users');
+			if($this->model_users->add_food_provider()){
+				echo "Successfully Added";
+				redirect('main/foodprovider');
+			}
+		} else {
+			echo "Sorry. Try Again";
+			$this->load->view('foodprovider');
+		}
+	}
+	public function delete_foodprovider($id){
+		 $this->model_users->del_foodProvider($id);
+		  redirect('main/foodprovider_view');
+}
+public function foodprovider_view(){
+		if ($this->session->userdata('is_logged_in')) {
+			$this->load->model('model_users');
+			$this->data['foodprovider'] = $this->model_users->get_foodprovider();
+			$this->load->view('foodprovider_view',$this->data);
+		}else{
+			redirect('main/restricted');
+		}
+	}
