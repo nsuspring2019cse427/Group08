@@ -1,0 +1,38 @@
+public function index()
+	{
+		$this->login();
+	}
+function show_department_id() {
+	$did = $this->uri->segment(3);
+	$data['department'] = $this->model_users->show_department();
+	$data['single_department'] = $this->model_users->show_department_id($did);
+	if ($this->session->userdata('is_logged_in')) {
+			$this->load->view('update_department', $data);
+		}else{
+			redirect('main/restricted');
+		}
+	
+	}
+	function update_department_id1() {
+	$did = $this->input->post('did');
+	
+	$data = array(
+	'd_name' => $this->input->post('d_name'),
+	'mid' => $this->input->post('mid'),
+	'department_phone' => $this->input->post('department_phone'),
+	'department_address' => $this->input->post('department_address')
+	);
+	$this->model_users->update_department_id1($did, $data);
+	
+	redirect('main/department_view');
+	
+	}
+public function department_view(){
+		if ($this->session->userdata('is_logged_in')) {
+			$this->load->model('model_users');
+			$this->data['department'] = $this->model_users->get_department();
+			$this->load->view('department_view',$this->data);
+		}else{
+			redirect('main/restricted');
+		}
+	}
