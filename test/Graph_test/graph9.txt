@@ -1,0 +1,46 @@
+
+public function index()
+	{
+		$this->login();
+	}
+public function donor_list(){
+		if ($this->session->userdata('is_logged_in')) {
+			$this->load->view('donor_list');
+		}else{
+			redirect('main/restricted');
+		}
+		
+	}
+
+
+	public function donor_add(){
+		if ($this->session->userdata('is_logged_in')) {
+			$this->load->view('donor_add');
+		}else{
+			redirect('main/restricted');
+		}
+	}
+	public function donor_validation(){
+		$this->load->library('form_validation');
+
+		$this->form_validation->set_rules('name','Name','required|trim');
+		$this->form_validation->set_rules('email','Email','required|trim');
+		$this->form_validation->set_rules('donate_type','Donate_Type','required|trim');
+		$this->form_validation->set_rules('donate_date','Donate_Date','required|trim');
+		
+
+		
+
+		if ($this->form_validation->run()) {
+			$this->load->model('model_users');
+			if($this->model_users->add_donor()){
+				echo "Successfully Added";
+				redirect('main/donor_add');
+			}
+		} else {
+			echo "Sorry. Try Again";
+			$this->load->view('donor_add');
+		}
+
+
+	}
