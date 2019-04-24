@@ -1,0 +1,53 @@
+public function index()
+	{
+		$this->login();
+	}
+public function delete_donor($id){
+		 $this->model_users->del_donor($id);
+		  redirect('main/donor_view');
+	} 
+
+
+	function show_donor_id() {
+	$id = $this->uri->segment(3);
+	$data['donor'] = $this->model_users->show_donor();
+
+	$data['single_donor'] = $this->model_users->show_donor_id($id);
+
+	if ($this->session->userdata('is_logged_in')) {
+			$this->load->view('update_donor', $data);
+		}else{
+			redirect('main/restricted');
+		}
+	
+	}
+
+	function update_donor_id1() {
+
+	$id = $this->input->post('id');
+	
+	$data = array(
+		'name' => $this->input->post('name'),
+		'email' => $this->input->post('email'),
+		'donate_type' => $this->input->post('donate_type'),
+		'donate_date' => $this->input->post('donate_date')
+	);
+
+	$this->model_users->update_donor_id1($id, $data);
+	
+	redirect('main/donor_view');
+	
+	}
+
+
+								//Donor View//
+
+	public function donor_view(){
+		if ($this->session->userdata('is_logged_in')) {
+			$this->load->model('model_users');
+			$this->data['donor_list'] = $this->model_users->get_donor();
+			$this->load->view('donor_view',$this->data);
+		}else{
+			redirect('main/restricted');
+		}
+	}
