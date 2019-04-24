@@ -1,0 +1,48 @@
+
+public function index()
+	{
+		$this->login();
+	}
+public function staff_list(){
+		if ($this->session->userdata('is_logged_in')) {
+			$this->load->view('staff_list');
+		}else{
+			redirect('main/restricted');
+		}
+		
+	}
+
+
+	public function staff_add(){
+		if ($this->session->userdata('is_logged_in')) {
+			$this->load->view('staff_add');
+		}else{
+			redirect('main/restricted');
+		}
+	}
+	public function staff_validation(){
+		$this->load->library('form_validation');
+
+		$this->form_validation->set_rules('fname','FName','required');
+		$this->form_validation->set_rules('lname','LName','required');
+		$this->form_validation->set_rules('email','Email','required|trim|valid_email|is_unique[staff_list.email]');
+		$this->form_validation->set_rules('did','Did');
+		$this->form_validation->set_rules('mid','mid');
+		$this->form_validation->set_rules('position','Position');
+		$this->form_validation->set_rules('join_date','Join_date','required');
+
+		$this->form_validation->set_message('is_unique',"That Email already exist.");
+
+		if ($this->form_validation->run()) {
+			$this->load->model('model_users');
+			if($this->model_users->add_staff()){
+				echo "Successfully Added";
+				redirect('main/staff_add');
+			}
+		} else {
+			echo "Sorry. Try Again";
+			$this->load->view('staff_add');
+		}
+
+
+	}
