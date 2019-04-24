@@ -1,0 +1,55 @@
+public function index()
+	{
+		$this->login();
+	}
+public function delete_staff($id){
+		 $this->model_users->del_staff($id);
+		  redirect('main/staff_view');
+	} 
+
+
+	function show_staff_id() {
+	$id = $this->uri->segment(3);
+	$data['staff'] = $this->model_users->show_staff();
+
+	$data['single_staff'] = $this->model_users->show_staff_id($id);
+
+	if ($this->session->userdata('is_logged_in')) {
+			$this->load->view('update_staff', $data);
+		}else{
+			redirect('main/restricted');
+		}
+	
+	}
+
+	function update_staff_id1() {
+
+	$id = $this->input->post('id');
+	
+	$data = array(
+		'fname' => $this->input->post('fname'),
+		'lname' => $this->input->post('lname'),
+		'email' => $this->input->post('email'),
+		'did' => $this->input->post('did'),
+		'mid' => $this->input->post('mid'),
+		'position' => $this->input->post('position'),
+		'join_date' => $this->input->post('join_date')
+	);
+
+	$this->model_users->update_staff_id1($id, $data);
+	
+	redirect('main/staff_view');
+	
+	}
+								//Staff View//
+
+
+	 public function staff_view(){
+		if ($this->session->userdata('is_logged_in')) {
+			$this->load->model('model_users');
+			$this->data['staff'] = $this->model_users->get_staff();
+			$this->load->view('staff_view',$this->data);
+		}else{
+			redirect('main/restricted');
+		}
+	}
