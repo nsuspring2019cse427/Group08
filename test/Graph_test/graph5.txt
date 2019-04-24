@@ -1,0 +1,38 @@
+public function index()
+	{
+		$this->login();
+	}
+public function department_list(){
+		if ($this->session->userdata('is_logged_in')) {
+			$this->load->view('department_list');
+		}else{
+			redirect('main/restricted');
+		}
+		
+	}
+	public function department(){
+		if ($this->session->userdata('is_logged_in')) {
+			$this->load->view('department');
+		}else{
+			redirect('main/restricted');
+		}
+	}
+	public function department_validation(){
+		$this->load->library('form_validation');
+		$this->form_validation->set_rules('department_name','department_name','required|is_unique[department.d_name]');
+		$this->form_validation->set_rules('manager_id','manager_id','required');
+		$this->form_validation->set_rules('department_phone','department_phone','required');
+		$this->form_validation->set_rules('department_address','department_address','required');
+		
+		$this->form_validation->set_message('is_unique',"That Department already exist.");
+		if ($this->form_validation->run()) {
+			$this->load->model('model_users');
+			if($this->model_users->add_department()){
+				echo "Successfully Added";
+				redirect('main/department');
+			}
+		} else {
+			echo "Sorry. Try Again";
+			$this->load->view('department');
+		}
+	}
