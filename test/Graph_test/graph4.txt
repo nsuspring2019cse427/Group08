@@ -1,0 +1,41 @@
+public function index()
+	{
+		$this->login();
+	}
+ 
+function show_foodprovider_id() {
+	$id = $this->uri->segment(3);
+	$data['foodprovider'] = $this->model_users->show_foodprovider();
+	$data['single_provider'] = $this->model_users->show_foodprovider_id($id);
+	if ($this->session->userdata('is_logged_in')) {
+			$this->load->view('update_foodprovider', $data);
+		}else{
+			redirect('main/restricted');
+		}
+	
+	}
+	function update_foodprovider_id1() {
+	$id = $this->input->post('id');
+	
+	$data = array(
+	'company_name' => $this->input->post('company_name'),
+	'address' => $this->input->post('address'),
+	'Email' => $this->input->post('Email'),
+	'phone_number' => $this->input->post('phone_number'),
+	'provided_food' => $this->input->post('provided_food')
+	);
+	$this->model_users->update_foodprovider_id1($id, $data);
+	
+	redirect('main/foodprovider_view');
+	
+	}
+public function foodprovider_view(){
+		if ($this->session->userdata('is_logged_in')) {
+			$this->load->model('model_users');
+			$this->data['foodprovider'] = $this->model_users->get_foodprovider();
+			$this->load->view('foodprovider_view',$this->data);
+		}else{
+			redirect('main/restricted');
+		}
+	}
+
